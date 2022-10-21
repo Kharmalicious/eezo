@@ -53,28 +53,22 @@ export default class Path {
         const { points, color, stroke } = path;
         const paths = [];
 
+        // reverse path for light to be properly computed
+        paths.push(path.reverse());
+
         // top
         const top = path.translate({ z: extrude });
+        paths.push(top);
 
         // sides
-        for (let p1, p2, i = 0; i < points.length; i++) {
-            // p1 = points[i];
-            // p2 = i === points.length - 1 ? points[0] : points[i + 1];
+        for (let l = points.length, i = 0; i < l; i++) {
             paths.push(new Path([
-                // p1, p2,
-                // p2.sum({ z: extrude }),
-                // p1.sum({ z: extrude })
                 points[i],
                 points[(i + 1) % points.length],
                 top.points[(i + 1) % points.length],
                 top.points[i],
             ], color, stroke));
         }
-
-        // top
-        // paths.push(path.translate({ z: extrude }));
-        paths.push(top);
-        paths.push(path.reverse());
 
         return paths;
     }
@@ -109,10 +103,11 @@ export default class Path {
             radius * Math.sin(0)
         )];
 
+        const PI2 = 2 * Math.PI;
         for (let i = 1; i <= segments; i += 1) {
             points.push(center.sum(
-                radius * Math.cos(i * 2 * Math.PI / segments),
-                radius * Math.sin(i * 2 * Math.PI / segments)
+                radius * Math.cos(i * PI2 / segments),
+                radius * Math.sin(i * PI2 / segments)
             ));
         }
 

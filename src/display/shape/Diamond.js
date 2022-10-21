@@ -38,6 +38,8 @@ export default class Diamond extends Shape {
                 vertexBottom
             ], color, stroke).reverse());
         }
+
+        // super.update();
     }
 
 };

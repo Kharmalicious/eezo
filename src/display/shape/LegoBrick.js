@@ -15,13 +15,13 @@ export default class LegoBrick extends DisplayObjectContainer {
     // }
 
     update() {
-        super.update();
         this._children = [];
         for (let w = 0, width = Math.floor(this.props.size.x); w < width; w++) {
             for (let h = 0, height = Math.floor(this.props.size.y); h < height; h++) {
                 this.add(new Lego({ position: [w, h], color: 0xcc0000 }));
             }
         }
+        super.update();
     }
 
 };

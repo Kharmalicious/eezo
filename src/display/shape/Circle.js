@@ -28,7 +28,9 @@ export default class Circle extends Shape {
     }
 
     update() {
-        this.path = Path.Circle(this.props.size.x, this.props.segments, this.props.color, this.props.stroke);
+        this.clearPaths();
+        this.add(Path.Circle(this.props.size.x, this.props.segments, this.props.color, this.props.stroke));
+        // super.update();
     }
 
 };

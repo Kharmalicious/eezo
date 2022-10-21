@@ -6,20 +6,15 @@ import Stage from './Stage';
 
 export default class Layer extends DisplayObjectContainer {
 
-    static T = 0;
-    static L = 0;
-    static B = 1;
-    static R = 1;
-    static C = .5;
-    static ORIGIN__TOP_LEFT = Point.get(Layer.L, Layer.T);
-    static ORIGIN__TOP_RIGHT = Point.get(Layer.R, Layer.T);
-    static ORIGIN__TOP_CENTER = Point.get(Layer.C, Layer.T);
-    static ORIGIN__BOTTOM_LEFT = Point.get(Layer.L, Layer.B);
-    static ORIGIN__BOTTOM_RIGHT = Point.get(Layer.R, Layer.B);
-    static ORIGIN__BOTTOM_CENTER = Point.get(Layer.C, Layer.B);
-    static ORIGIN__CENTER_LEFT = Point.get(Layer.L, Layer.C);
-    static ORIGIN__CENTER_RIGHT = Point.get(Layer.R, Layer.C);
-    static ORIGIN__CENTER = Point.get(Layer.C, Layer.C);
+    static ORIGIN__TOP_LEFT = Point.get(0, 0);
+    static ORIGIN__TOP_RIGHT = Point.get(1, 0);
+    static ORIGIN__TOP_CENTER = Point.get(.5, 0);
+    static ORIGIN__BOTTOM_LEFT = Point.get(0, 1);
+    static ORIGIN__BOTTOM_RIGHT = Point.get(1, 1);
+    static ORIGIN__BOTTOM_CENTER = Point.get(.5, 1);
+    static ORIGIN__CENTER_LEFT = Point.get(0, .5);
+    static ORIGIN__CENTER_RIGHT = Point.get(1, .5);
+    static ORIGIN__CENTER = Point.get(.5, .5);
 
     static TYPE__2D = '2d';
     static TYPE__ISO = 'iso';
@@ -31,9 +26,11 @@ export default class Layer extends DisplayObjectContainer {
         this.TYPE = type;
         this.UNIT = unit;
 
-        // this._layer = this;
         this._listeners = {};
-        this._nodes = {};
+        this._stage = null;
+        this._render = {
+            ORIGIN: null
+        }
     }
 
     get layer() {
@@ -41,10 +38,18 @@ export default class Layer extends DisplayObjectContainer {
     }
 
     get stage() {
-        if (this._parent instanceof Stage) {
-            return this._parent;
-        }
-        return null;
+        return this._stage;
+    }
+
+    set stage(stage) {
+        this._stage = stage;
+
+        this._render.ORIGIN = this.getOrigin({
+            width: stage.canvas.width,
+            height: stage.canvas.height
+        });
+
+        this.draw();
     }
 
     addGridPath() {
@@ -75,17 +80,17 @@ export default class Layer extends DisplayObjectContainer {
     screenToLayer(point) {
         const _point = point.mult(1 / this.UNIT);
         if (this.TYPE === Layer.TYPE__ISO) {
-            return _point.toIso();
+            return _point.sub(this._render.ORIGIN).toIso();
         }
-        return _point;
+        return _point.sub(this._render.ORIGIN);
     }
 
     layerToScreen(point) {
         const _point = point.mult(this.UNIT);
         if (this.TYPE === Layer.TYPE__ISO) {
-            return _point.toOrtho();
+            return _point.toOrtho().sum(this._render.ORIGIN);
         }
-        return _point;
+        return _point.sum(this._render.ORIGIN);
     }
 
     // EVENTS

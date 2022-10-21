@@ -1,3 +1,4 @@
+import Path from '../../core/Path';
 import Rect from './Rect';
 
 export default class Cube extends Rect {
@@ -7,7 +8,6 @@ export default class Cube extends Rect {
             size: [1, 1, 1],
             ...props
         });
-        this.props.extruded = true;
         this.name = 'cube';
     }
 
@@ -15,6 +15,13 @@ export default class Cube extends Rect {
         this.props.size.z = height;
         this.update();
         return this;
+    }
+
+    update() {
+        super.update();
+        const paths = Path.extrude(this._paths[0], this.props.size.z);
+        this.clearPaths();
+        this.add(paths);
     }
 
 };

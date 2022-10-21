@@ -1,3 +1,4 @@
+import Path from '../../core/Path';
 import Circle from './Circle';
 
 export default class Cylinder extends Circle {
@@ -7,7 +8,6 @@ export default class Cylinder extends Circle {
             size: [radius, radius, extrude],
             ...props
         }, radius, segments);
-        this.props.extruded = true;
         this.name = 'cylinder';
     }
 
@@ -15,6 +15,13 @@ export default class Cylinder extends Circle {
         this.props.size.z = height;
         this.update();
         return this;
+    }
+
+    update() {
+        super.update();
+        const paths = Path.extrude(this._paths[0], this.props.size.z);
+        this.clearPaths();
+        this.add(paths);
     }
 
 };

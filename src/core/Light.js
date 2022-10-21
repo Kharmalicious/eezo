@@ -11,6 +11,7 @@ export default class Light {
     }
 
     computeColor(color, points) {
+        // console.log('COMPUTING COLOR...');
         if (points.length < 3) {
             return color;
         }

@@ -29,14 +29,15 @@ export default class Pyramid extends Shape {
 
         this.clearPaths();
         this.add(path.reverse());
-        for (let p1, p2, i = 0; i < points.length; i++) {
-            p1 = points[i];
-            p2 = i === points.length - 1 ? points[0] : points[i + 1];
+        for (let l = points.length, i = 0; i < l; i++) {
             this.add(new Path([
-                p1, p2,
+                points[i],
+                points[(i + 1) % points.length],
                 vertex
             ], color, stroke));
         }
+
+        // super.update();
     }
 
 };

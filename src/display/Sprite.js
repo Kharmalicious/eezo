@@ -1,7 +1,8 @@
 import Point from '../core/Point';
-import Bitmap from './Bitmap';
+import Bitmap from '../core/Bitmap';
+import DisplayObject from './DisplayObject';
 
-export default class Sprite extends Bitmap {
+export default class Sprite extends DisplayObject {
 
     constructor(props) {
         super({
@@ -9,11 +10,23 @@ export default class Sprite extends Bitmap {
             ...props
         });
         this.props = {
+            imagePath: '',
             physical: false,
             ...this.props
         };
+
+        this._bitmap = new Bitmap({
+            imagePath: this.props.imagePath
+        });
         this._frames = [];
         this._current = -1;
+        this._render = {
+            wireframe: this._bitmap.props.wireframe,
+            origin: null, image: null,
+            sx: null, sy: null, sw: null, sh: null,
+            dx: null, dy: null, dw: null, dh: null
+        };
+
         this.UNIT = 1
     }
 
@@ -22,26 +35,53 @@ export default class Sprite extends Bitmap {
             const scale = this.layer.UNIT / this.UNIT;
             this.props.scale = Point.get(scale, scale);
 
-            const preloaded = this.layer.stage.imageCache[this.props.imagePath];
+            const preloaded = this.stage?.imageCache[this.props.imagePath];
             if (preloaded) {
-                this.image = preloaded;
-                this.updateImageSize(preloaded);
-                this.reposition();
+                this._bitmap.image(preloaded);
             }
+
+            this._render.image = this._bitmap._image;
         }
         this._frames.length && this.renderFrame(0);
     }
 
-    onLoad() {
-        this.reposition();
+    update() {
+        this._render.origin = this.layer.layerToScreen(this.renderPosition.sum([.5, .5]));
+        this.updateOffset();
     }
 
-    reposition() {
-        if (this._loaded) {
-            // repositions bitmap vertically aligned with position
-            this.props.destinationPosition = this.props.destinationPosition
-                .sum([-this.destination.size.x / 2, -this.destination.size.y]);
-        }
+    updateSize(size = null) {
+        size !== null && this._bitmap.size(size);
+
+        const { x: sw, y: sh } = this._bitmap.props.size;
+        const { x: dw, y: dh } = this._bitmap.props.size.mult(this.props.scale);
+        this._render = {
+            ...this._render,
+            sw, sh,
+            dw, dh
+        };
+    }
+
+    updatePosition(position = null) {
+        position !== null && this._bitmap.position(position);
+
+        const { x: sx, y: sy } = this._bitmap.props.position;
+        this._render = {
+            ...this._render,
+            sx, sy
+        };
+    }
+
+    updateOffset(offset = null) {
+        offset !== null && this._bitmap.offset(offset);
+
+        const { dw, dh } = this._render;
+        const position = this._bitmap.props.offset.mult(this.props.scale).sub([dw / 2, dh]);
+        const { x: dx, y: dy } = position.sum(this._render.origin);
+        this._render = {
+            ...this._render,
+            dx, dy
+        };
     }
 
     addFrames(frames) {
@@ -56,18 +96,19 @@ export default class Sprite extends Bitmap {
 
     renderFrame(frame) {
         this._current = frame;
-        const { size, position, offset } = this._frames[frame];
+        const { size: frameSize, position: framePosition, offset: frameOffset } = this._frames[frame];
+        const { size: currentSize, position: currentPosition, offset: currentOffset } = this._bitmap.props;
 
-        const sizeChanged = size && size !== this.props.sourceSize;
-        const positionChanged = position && position !== this.props.sourcePosition;
-        const offsetChanged = offset && offset !== this.props.destinationPosition;
+        const sizeChanged = frameSize && !currentSize.equals(frameSize);
+        const positionChanged = framePosition && !currentPosition.equals(framePosition);
+        const offsetChanged = frameOffset && !currentOffset.equals(frameOffset);
 
-        sizeChanged && (this.props.sourceSize = Point.get(size));
-        sizeChanged && (this.props.destinationSize = Point.get(size).mult(this.props.scale));
-        positionChanged && (this.props.sourcePosition = Point.get(position));
-        offsetChanged && (this.props.destinationPosition = Point.get(offset).mult(this.props.scale));
-        (offsetChanged || sizeChanged) && this.reposition();
+        sizeChanged && this.updateSize(frameSize);
+        positionChanged && this.updatePosition(framePosition);
+        (sizeChanged || offsetChanged) && this.updateOffset(frameOffset);
     }
+
+    // OVERRIDE set position
 
     position() {
         const oldPos = Point.get(this.props.position);
