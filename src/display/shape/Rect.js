@@ -12,7 +12,10 @@ export default class Rect extends Shape {
     }
 
     update() {
-        this.path = Path.Rect(this.props.size.x, this.props.size.y, this.props.color, this.props.stroke);
+        // this.path = Path.Rect(this.props.size.x, this.props.size.y, this.props.color, this.props.stroke);
+        this.clearPaths();
+        this.add(Path.Rect(this.props.size.x, this.props.size.y, this.props.color, this.props.stroke));
+        // super.update();
     }
 
 };

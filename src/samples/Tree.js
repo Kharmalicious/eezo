@@ -5,6 +5,7 @@ export default class Tree extends Sprite {
 
     constructor(props) {
         super({
+            wireframe: true,
             physical: true,
             imagePath: 'img/trees.png',
             ...props

@@ -46,6 +46,7 @@ export default class Stairs extends Shape {
 
             this.add([rect, ...Path.extrude(rect, step.z)]);
         }
+        super.update();
     }
 
 };

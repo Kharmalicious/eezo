@@ -11,6 +11,14 @@ export default class DisplayObjectContainer extends DisplayObject {
         return this._children.sort((c1, c2) => c2.depth - c1.depth);
     }
 
+    update() {
+        this._children.forEach(child => child.update());
+    }
+
+    draw() {
+        this._children.forEach(child => child.draw());
+    }
+
     add(child) {
         if (child instanceof Array) {
             child.forEach(c => this.add(c));
@@ -51,4 +59,5 @@ export default class DisplayObjectContainer extends DisplayObject {
             console.log('cant remove', child);
         }
     }
+
 };

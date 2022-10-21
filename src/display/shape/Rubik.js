@@ -29,6 +29,8 @@ export default class Rubik extends Shape {
         this.add(Path.Rect(this.props.size.x, this.props.size.y, 0x00ff00).rotate(Point.get({ y: -90 }), center));
         // U
         this.add(Path.Rect(this.props.size.x, this.props.size.y, 0xffff00).translate({ z: 1 }, center));
+
+        super.update();
     }
 
 };

@@ -4,10 +4,10 @@ import Point from '../../core/Point';
 
 export default class Grid extends Shape {
 
-    constructor(span, color = 0x999999) {
+    constructor(size, color = 0x999999) {
         super();
-        const min = -span;
-        const max = span;
+        const min = -size;
+        const max = size;
         this.name = 'grid';
 
         for (let x = min; x <= max; x++) {
@@ -24,4 +24,29 @@ export default class Grid extends Shape {
         }
     }
 
+    /*
+    constructor(span, color = 0x999999) {
+        super({ color });
+        this.min = -span;
+        this.max = span;
+        this.name = 'grid';
+    }
+
+    update() {
+        console.log('UPDATE GRID');
+        for (let x = this.min; x <= this.max; x++) {
+            this.add(new Path([
+                Point.get(x, this.min, 0),
+                Point.get(x, this.max, 0)
+            ], null, this.props.color));
+        }
+        for (let y = this.min; y <= this.max; y++) {
+            this.add(new Path([
+                Point.get(this.min, y, 0),
+                Point.get(this.max, y, 0)
+            ], null, this.props.color));
+        }
+        super.update();
+    }
+    */
 };

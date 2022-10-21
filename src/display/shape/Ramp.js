@@ -54,6 +54,8 @@ export default class Ramp extends Shape {
             Point.get(size.x, 0, size.z),
             Point.get(0, 0, size.z)
         ], color, stroke).reverse());
+
+        // super.update();
     }
 
 };

@@ -82,7 +82,7 @@ world.addGridPath();
 //     me.moveToTarget(d.tile);
 // });
 
-// world.add([cube1, cube2, cube3, pyramid, cylinder, diamond]);
+world.add([cube1, cube2, cube3, pyramid, cylinder, diamond]);
 // world.add([ramp, stairs]);
 // world.add(tokens);
 // world.add(trees);
@@ -104,41 +104,37 @@ ui.add([labelFPS]);
 
 const stage = new Stage();
 stage.add([grid, world, ui]);
-stage.render();
-// stage.start();
+// stage.render();
+stage.start();
 
 stage.preloadImage('img/boy.png');
 stage.preloadImage('img/trees.png');
 
 stage.showFPS(fps => labelFPS.text(`fps: ${fps}`));
 
-// cube1.step(() => cube1.rotate([1, 1, 1]));
-// cube2.step(() => cube2.rotate([1, 1, 1]));
-// cube3.step(() => cube3.rotate([1, 1, 1]));
-// pyramid.step(() => pyramid.rotate([1, 1, 1]));
-// cylinder.step(() => cylinder.rotate([1, 1, 1]));
-// diamond.step(() => diamond.rotate([1, 1, 1]));
-// stairs.step(() => stairs.rotate({ z: 1 }));
-// ramp.step(() => ramp.rotate({ z: 1 }));
+cube1.step(() => cube1.rotate([1, 1, 1]));
+cube2.step(() => cube2.rotate([1, 1, 1]));
+cube3.step(() => cube3.rotate([1, 1, 1]));
+pyramid.step(() => pyramid.rotate([1, 1, 1]));
+cylinder.step(() => cylinder.rotate([1, 1, 1]));
+diamond.step(() => diamond.rotate([1, 1, 1]));
+stairs.step(() => stairs.rotate({ z: 1 }));
+ramp.step(() => ramp.rotate({ z: 1 }));
 
 // KEYS MAPPING (add new class for this)
-// window.addEventListener('keypress', (e) => {
-//     switch (e.key) {
-//         case 'a':
-//             me.moveWest();
-//             break;
-//         case 's':
-//             me.moveSouth();
-//             break;
-//         case 'd':
-//             me.moveEast();
-//             break;
-//         case 'w':
-//             me.moveNorth();
-//             break;
-//     };
-// });
-
-const UI_cont = new UIContainer(world);
-document.body.appendChild(UI_cont.element);
-UI_cont.init();
+window.addEventListener('keypress', (e) => {
+    switch (e.key) {
+        case 'a':
+            me.moveWest();
+            break;
+        case 's':
+            me.moveSouth();
+            break;
+        case 'd':
+            me.moveEast();
+            break;
+        case 'w':
+            me.moveNorth();
+            break;
+    };
+});

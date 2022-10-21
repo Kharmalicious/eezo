@@ -1,10 +1,10 @@
 export default class Color {
 
     constructor(red = 0, green = 0, blue = 0, alpha = 255) {
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
-        this.alpha = alpha;
+        this.red = red < 0 ? 0 : red;
+        this.green = green < 0 ? 0 : green;
+        this.blue = blue < 0 ? 0 : blue;
+        this.alpha = alpha < 0 ? 0 : alpha;
 
         const hsl = Color.rgbToHsl(red, green, blue);
         this.hue = hsl.h;

@@ -21,7 +21,7 @@ export default class Point {
     }
 
     get depth() {
-        return - (this.x + this.y + this.z * 2);
+        return - (this.x + this.y + this.z * .5);
     }
 
     get average() {
@@ -88,12 +88,17 @@ export default class Point {
         return Math.sqrt(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
     }
 
-    equals(point) {
+    equals(x = 0, y = 0, z = 0) {
+        const { x: _x, y: _y, z: _z } = Point.get(x, y, z);
         return (
-            this.x === point.x &&
-            this.y === point.y &&
-            this.z === point.z
+            this.x === _x &&
+            this.y === _y &&
+            this.z === _z
         );
+    }
+
+    static equals(p1, p2) {
+        return Point.get(p1).equals(Point.get(p2));
     }
 
     // ROTATION
@@ -149,6 +154,7 @@ export default class Point {
         if (point instanceof Object) {
             return new Point(point.x || 0, point.y || 0, point.z || 0);
         }
+        return new Point();
     }
 
 }

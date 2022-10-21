@@ -8,7 +8,7 @@ export default class Lego extends Rect {
             size: [1, 1, 1],
             ...props
         });
-        this.props.extruded = true;
+        // this.props.extruded = true;
         this.name = 'lego';
     }
 
@@ -20,7 +20,6 @@ export default class Lego extends Rect {
 
     update() {
         this.clearPaths();
-        super.update();
 
         const radius = .6;
         const circle = Path.Circle(radius, 20, this.props.color, this.props.stroke);
@@ -34,6 +33,8 @@ export default class Lego extends Rect {
                 ), 0.2));
             }
         }
+
+        // super.update();
     }
 
 };
